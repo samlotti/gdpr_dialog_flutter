@@ -3,14 +3,14 @@ PODS:
   - gdpr_dialog (0.0.1):
     - Flutter
     - PersonalizedAdConsent
-  - PersonalizedAdConsent (1.0.4)
+  - PersonalizedAdConsent (1.0.5)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - gdpr_dialog (from `.symlinks/plugins/gdpr_dialog/ios`)
 
 SPEC REPOS:
-  trunk:
+  https://github.com/cocoapods/specs.git:
     - PersonalizedAdConsent
 
 EXTERNAL SOURCES:
@@ -22,8 +22,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   gdpr_dialog: f90fc33956d6f87dbe16dc94509995335f264386
-  PersonalizedAdConsent: 4b87320b7a0f22576bec530ae3b7adba88a24c78
+  PersonalizedAdConsent: dbecabb3467df967c16d9cebc2ef4a8890e4bbd8
 
-PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
+PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.7.5
