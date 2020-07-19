@@ -28,6 +28,8 @@ class _MyAppState extends State<MyApp> {
                       .showDialog('pub-2111344032223404', 'https://plus1s.com/privacy-policy/', isForTest: true, testDeviceId: '')
                       .then((onValue) {
                     setState(() => status = 'dialog result == $onValue');
+                  }, onError: (error) {
+                    setState(() => status = "An error was returned: $error");
                   });
                 },
               ),
@@ -58,7 +60,12 @@ class _MyAppState extends State<MyApp> {
                 child: Text('Is user from Eea ?'),
                 onPressed: () => GdprDialog.instance
                     .isRequestLocationInEea('pub-2111344032223404')
-                    .then((value) => setState(() => status = 'is user from Eea == $value')),
+                    .then((value) => setState(() => status = 'is user from Eea == $value'),
+                    onError: (err) {
+                      setState(() {
+                        status = "Error: $err";
+                      });
+                    }),
               ),
               Container(height: 50),
               Text(status),

@@ -59,13 +59,21 @@ public class GdprDialogPlugin implements MethodCallHandler {
       }
 
       @Override
-      public void onFailedToUpdateConsentInfo(String errorDescription) { }
+      public void onFailedToUpdateConsentInfo(String errorDescription) {
+        returnError(errorDescription);
+      }
     });
   }
 
   private void returnResult (boolean result) {
     try {
     this.result.success(result);
+    }catch (Exception ignored){}
+  }
+
+  private void returnError (String message) {
+    try {
+      this.result.error("", message, null);
     }catch (Exception ignored){}
   }
 
@@ -103,6 +111,7 @@ public class GdprDialogPlugin implements MethodCallHandler {
 
               @Override
               public void onConsentFormError(String errorDescription) {
+                returnError(errorDescription);
               }
             })
             .withPersonalizedAdsOption()
@@ -181,7 +190,7 @@ public class GdprDialogPlugin implements MethodCallHandler {
       }
       @Override
       public void onFailedToUpdateConsentInfo(String reason) {
-
+        returnError(reason);
       }
     });
   }

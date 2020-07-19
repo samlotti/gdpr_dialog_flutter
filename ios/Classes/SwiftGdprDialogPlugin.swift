@@ -68,12 +68,11 @@ public class SwiftGdprDialogPlugin: NSObject, FlutterPlugin {
         {(_ error: Error?) -> Void in
             if let error = error {
                 print("ERROR \(error)")
-                result(false)
+                result(FlutterError(code:"GDPR1", message: error.localizedDescription, details: nil))
             } else {
                 result(PACConsentInformation.sharedInstance.isRequestLocationInEEAOrUnknown);
             }
-        
-    }
+        }
     }
     
     private func getConsentStatus(result: @escaping FlutterResult) {
@@ -95,14 +94,18 @@ public class SwiftGdprDialogPlugin: NSObject, FlutterPlugin {
 
     private func checkConsent(result: @escaping FlutterResult, publisherId: String, privacyUrl: String) {
     
-            showConsent(publisherId: publisherId, privacyUrl: privacyUrl) { (bool) in
-                print("result IOS ++++++++  " , bool)
-                result(bool)
+            showConsent(publisherId: publisherId, privacyUrl: privacyUrl) { consentResult in
+                switch consentResult {
+                case .failure(let error):
+                    result(FlutterError(code:"GDPR2", message: error.localizedDescription, details: nil))
+                case .success(let value):
+                    result(value)
+                }
             };
 
     }
     
-    func showConsent(publisherId: String, privacyUrl: String, checkBool : @escaping(Bool) -> Void)
+    func showConsent(publisherId: String, privacyUrl: String, checkBool : @escaping(Result<Bool, Error>) -> Void)
     {
     
         PACConsentInformation.sharedInstance.requestConsentInfoUpdate(
@@ -110,7 +113,7 @@ public class SwiftGdprDialogPlugin: NSObject, FlutterPlugin {
         {(_ error: Error?) -> Void in
             if let error = error {
                 print("ERROR \(error)")
-                checkBool(false)
+                checkBool(.failure(error))
             } else {
                 print("Success GDPG")
                 if PACConsentInformation.sharedInstance.isRequestLocationInEEAOrUnknown == true {
@@ -122,21 +125,22 @@ public class SwiftGdprDialogPlugin: NSObject, FlutterPlugin {
                 
                 form.load { (Error) in
                     if Error != nil {
-                        checkBool(false)
-                        print("ERROR === 1 \(String(describing: Error))")
+                        // checkBool(.success(false))
+                        // print("ERROR === 1 \(String(describing: Error))")
+                        checkBool(.failure(Error!))
                     } else  {
                         form.present(from: (UIApplication.shared.delegate?.window?!.rootViewController)!) { (error, user) in
                             if error != nil {
-                                checkBool(false)
+                                checkBool(.success(false))
                             } else {
                                 let status = PACConsentInformation.sharedInstance.consentStatus
                                  if status == .nonPersonalized {
                                     print("nonPersonalized");
-                                    checkBool(false)
+                                    checkBool(.success(false))
                                 }
                                 if status == .personalized{
                                     print("personalized");
-                                    checkBool(true)
+                                    checkBool(.success(true))
                                 }
                             }
                         }
@@ -144,7 +148,7 @@ public class SwiftGdprDialogPlugin: NSObject, FlutterPlugin {
                  }
                 } else {
                     print("ne iz evropi")
-                    checkBool(true)
+                    checkBool(.success(true))
                 }
             }
         }

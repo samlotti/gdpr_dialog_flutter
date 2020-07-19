@@ -15,7 +15,9 @@ In release build set false or delete this argument!
 GdprDialog.instance.showDialog('pub-2111344032223404', 'https://plus1s.com/privacy-policy/', isForTest: true, testDeviceId: '')
                       .then((onValue) {
                     print('result === $onValue');
-                  });
+                  }, onError: (error) {
+                    print('error === $error');  
+                   }));
 ```
 
 In the release build, you only need the first two parameters.
@@ -72,3 +74,4 @@ GdprDialog.instance.isRequestLocationInEea(String publisherId);
 It will return bools:
 - true = the user is located in the Eea
 - false = the user is not located in the Eea
+- error = There was an error determining the location status
